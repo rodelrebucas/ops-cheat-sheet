@@ -1,0 +1,109 @@
+## Starter Usage
+
+# Run this to create the Vagrantfile
+# which contains the initial setup
+# the box will be name precise32
+# and can be downloaded in the url specified
+1. vagrant init precise32 http://files.vagrantup.com/precise32.box
+
+# additional setup can be made on vagrantfile
+# Once the vagrantfile is created
+# run
+2. vagrant up
+
+# this will download the box
+# after downloading, login by
+3. vagrant ssh
+
+## Note ##
+# create a separate folder
+# since the path where vagrantfile
+# is created is shared in the box
+
+## Check the documentation for more details ##
+
+----------------------------------------------
+## Creating a custom box ##
+
+1. Create a virtual machine of your choice. In this example
+will be using ubuntu server 16.04 on virtualbox
+
+Example settings:
+
+    Name: vagrant-ubuntu64
+    Type: Linux
+    Version: Ubuntu64
+    Memory Size: 512MB (to taste)
+    New Virtual Disk: [Type: VMDK, Size: 40 GB]
+
+
+    Disable audio
+    Disable USB
+    Ensure Network Adapter 1 is set to NAT
+    Add this port-forwarding rule:
+	 [Name: SSH, Protocol: TCP, Host IP: blank, Host Port: 2222, Guest IP: blank, Guest Port: 22]
+
+2. Once installation is finished, change  root pass
+	$ su -
+	$ sudo passwd root
+3. Setup vagrant user to run sudo without prompting pass
+	$ sudo visudo -f /etc/sudoers.d/vagrant
+	# add this line
+	vagrant ALL=(ALL) NOPASSWD:ALL 
+4. Update the os and restart
+	$ sudo apt-get update -y
+	$ sudo apt-get upgrade -y
+	$ sudo shutdown -r now
+5. Install the unsecure vagrant key
+	$ mkdir -p /home/vagrant/.ssh
+	$ chmod 0700 /home/vagrant/.ssh
+	$ wget --no-check-certificate \
+    		https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub \
+    		-O /home/vagrant/.ssh/authorized_keys
+	$ chmod 0600 /home/vagrant/.ssh/authorized_keys
+	$ chown -R vagrant /home/vagrant/.ssh
+6. Uncomment `AuthorizedKeysFile %h/.ssh/authorized_keys` on /etc/ssh/sshd_config
+7. Install linuxheaders
+	$ sudo apt-get install -y gcc build-essential dkms
+
+	# Should install `linux-headers-server` 
+	# 1/10/2019 can't find package using ubuntu 16.04 lts
+	# perhaps a workaround
+	( $ sudo apt-get upgrade linux-generic linux-headers-generic linux-image-generic )
+
+8. Install vbox GuestAdditions
+	$ sudo mount /dev/cdrom /mnt 
+	$ cd /mnt
+	$ sudo ./VBoxLinuxAdditions.run
+10. Zeroing the drive first before packaging
+	$ sudo dd if=/dev/zero of=/EMPTY bs=1M
+	$ sudo rm -f /EMPTY
+11. Package the box with:
+	$ vagrant package --base `name of your created vbox(vagrant-ubuntu-server)`
+12. Test the box
+	$ vagrant box add `box name` `your packaged box`
+	$ vagrant init `box name`
+	$ vagrant up
+	$ vagrant ssh # to login
+
+## Cloning ##
+
+	# By halting the current box and packaging it
+		# should be in the vagrant folder where the vagrant box is
+		# create a package.box
+			$ vagrant halt
+			$ vagrant package
+		# proceed to step 12
+		# or manual configuration
+			$ vagrant init
+			# edit this line with the generated vagrant file
+    				config.vm.box = "you-box-name"
+   				config.vm.box_url = "file:///location-of-the-box"
+			# edit ip or others ...
+			$ vagrant up
+			$ vagrant ssh
+
+	# or by creating directly from the packaged box using step 12 above
+
+	## Cloning by halting makes you copy a box after a user has installed packages
+ 	## Cloning a packaged box creates a base without installed packages
