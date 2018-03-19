@@ -33,7 +33,7 @@ Example settings:
     Name: vagrant-ubuntu64
     Type: Linux
     Version: Ubuntu64
-    Memory Size: 512MB (to taste)
+    Memory Size: 512MB
     New Virtual Disk: [Type: VMDK, Size: 40 GB]
 
 
