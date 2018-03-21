@@ -1,5 +1,12 @@
 ## Starter Usage
 
+## Explanation on basic commands
+	$vagrant init - generates a Vagrantfile that describes the setup of your vagrant box, modify as necessary.
+	$vagrant up - turns on your vagrant box.
+	$vagrant halt - powers off
+	$vagrant suspend - saves the state of your vagrant box 
+	$vagrant ssh - log in to your vagrant box through ssh
+
 # Run this to create the Vagrantfile
 # which contains the initial setup
 # the box will be name precise32
