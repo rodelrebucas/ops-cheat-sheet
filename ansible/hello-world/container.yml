@@ -1,0 +1,21 @@
+version: "2"
+settings:
+  conductor:
+    base: centos:7
+  project_name: hello-world
+  k8s_namespace:
+     name: hello-world
+     description: Simple Demo
+     display_name: Hello, World
+services:
+  flask:
+    from: centos:7
+    roles:
+      - flask
+    entrypoint: /usr/bin/dumb-init
+    command: gunicorn -w 4 -b 0.0.0.0:4000 helloworld:app
+    ports:
+      - 4000:4000
+    working_dir: /app
+    user: flask
+registries: {}

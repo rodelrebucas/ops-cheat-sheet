@@ -1,0 +1,34 @@
+---
+# tasks file for flask
+- name: Install dumb init
+  get_url:
+    dest: /usr/bin/dumb-init
+    url: https://github.com/Yelp/dumb-init/releases/download/v1.2.0/dumb-init_1.2.0_amd64
+    mode: 0775
+    validate_certs: no
+- name: Install epel
+  yum:
+    name: epel-release
+    state: present
+    disable_gpg_check: yes
+- name: Install pip
+  yum:
+    name: python2-pip
+    state: present
+    disable_gpg_check: yes
+- name: Create flask user
+  user:
+    name: flask
+    uid: 1000
+    group: root
+    state: present
+    createhome: yes
+    home: "/app"
+- name: Copy source into container
+  synchronize:
+    src: "/src/"
+    dest: "/app"
+  remote_user: flask
+- name: Install Python dependencies
+  pip:
+    requirements: /app/requirements.txt
