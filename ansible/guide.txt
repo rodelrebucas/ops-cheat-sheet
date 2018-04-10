@@ -1,5 +1,6 @@
 ## Using ansible-container
 ## python3.5
+## install the requirements.txt
 
 # Create your parent folder
 	$ mkdir hello-world
