@@ -1,4 +1,4 @@
-## Starter Usage
+## Starter Usaga
 
 ## Explanation on basic commands
 	$vagrant init - generates a Vagrantfile that describes the setup of your vagrant box, modify as necessary.
@@ -6,6 +6,7 @@
 	$vagrant halt - powers off
 	$vagrant suspend - saves the state of your vagrant box 
 	$vagrant ssh - log in to your vagrant box through ssh
+	$vagrant destroy - revert all changes to the box
 
 # Run this to create the Vagrantfile
 # which contains the initial setup
@@ -13,9 +14,19 @@
 # and can be downloaded in the url specified
 1. vagrant init precise32 http://files.vagrantup.com/precise32.box
 
+or 
+
+# Without knowing the url repo
+	$ vagrant init `vboxname in vagrant repo`
+
+1.A # Adding a box with a name withour creating vagrantfile
+	$ vagrant box add 'boxnameyouwant' 'the box file url'
+	# you can start a new box and config based on this box by
+	$ vagrant init  'boxnameyouwant'
+
 # additional setup can be made on vagrantfile
 # Once the vagrantfile is created
-# run
+# download and run
 2. vagrant up
 
 # this will download the box
@@ -88,13 +99,14 @@ Example settings:
 11. Package the box with:
 	$ vagrant package --base `name of your created vbox(vagrant-ubuntu-server)`
 12. Test the box
-	# adds the box from a local file
-	# this box also downloads a box online
-	# if local box not found
-	$ vagrant box add `box name` `your packaged box`
+	# adds a box based from a local packaged box or remote box
+	# and a new box file  in .vagrant.d/boxes
+	$ vagrant box add `box name` `your packaged box url`
+	# configure the box
 	$ vagrant init `box name`
 	$ vagrant up
 	$ vagrant ssh # to login
+## You can also 
 
 ## Cloning ##
 
