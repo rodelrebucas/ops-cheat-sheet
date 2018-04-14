@@ -1,4 +1,4 @@
-## Starter Usaga
+## Starter Usage
 
 ## Explanation on basic commands
 	$vagrant init - generates a Vagrantfile that describes the setup of your vagrant box, modify as necessary.

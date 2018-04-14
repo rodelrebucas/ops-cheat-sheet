@@ -1,0 +1,2 @@
+## To start testing ansible first provision a vagrant box for testing a node
+## see the vagrant guide
