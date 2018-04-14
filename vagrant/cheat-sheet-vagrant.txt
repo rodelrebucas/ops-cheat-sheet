@@ -19,11 +19,6 @@ or
 # Without knowing the url repo
 	$ vagrant init `vboxname in vagrant repo`
 
-1.A # Adding a box with a name withour creating vagrantfile
-	$ vagrant box add 'boxnameyouwant' 'the box file url'
-	# you can start a new box and config based on this box by
-	$ vagrant init  'boxnameyouwant'
-
 # additional setup can be made on vagrantfile
 # Once the vagrantfile is created
 # download and run
@@ -109,7 +104,8 @@ Example settings:
 ## You can also 
 
 ## Cloning ##
-
+## By cloning you maintain a clean slate copy
+## and have another copy or more for experiments
 	# By halting the current box and packaging it
 		# should be in the vagrant folder where the vagrant box is
 		# create a package.box
