@@ -9,6 +9,7 @@
 	$vagrant destroy - revert all changes to the box
 
 ## Adding a vagrant box
+## proceed to cloning if you want to add box locally
 # create the init vagrantinit file
 # that contains configurations about the vagrant box
 # command below tell the initialize a box
@@ -91,15 +92,14 @@ Example settings:
 	$ sudo rm -f /EMPTY
 11. Package the box with:
 	$ vagrant package --base `name of your created vbox(vagrant-ubuntu-server)`
-12. Test the box
+12. Add a packaged box to vagrant environment
 	# adds a box based from a local packaged box or remote box
 	# and a new box file  in .vagrant.d/boxes
-	$ vagrant box add `box name` `your packaged box url`
+		$ vagrant box add `box name` `your packaged box url`
 	# configure the box
-	$ vagrant init `box name`
-	$ vagrant up
-	$ vagrant ssh # to login
-## You can also 
+		$ vagrant init `box name`
+		$ vagrant up
+		$ vagrant ssh # to login
 
 ## Cloning ##
 ## By cloning you maintain a clean slate copy
