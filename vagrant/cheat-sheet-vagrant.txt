@@ -88,6 +88,9 @@ Example settings:
 11. Package the box with:
 	$ vagrant package --base `name of your created vbox(vagrant-ubuntu-server)`
 12. Test the box
+	# adds the box from a local file
+	# this box also downloads a box online
+	# if local box not found
 	$ vagrant box add `box name` `your packaged box`
 	$ vagrant init `box name`
 	$ vagrant up
@@ -104,7 +107,7 @@ Example settings:
 		# or manual configuration
 			$ vagrant init
 			# edit this line with the generated vagrant file
-    				config.vm.box = "you-box-name"
+    				config.vm.box = "your-box-name"
    				config.vm.box_url = "file:///location-of-the-box"
 			# edit ip or others ...
 			$ vagrant up
