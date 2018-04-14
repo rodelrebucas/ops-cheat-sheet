@@ -6,7 +6,7 @@
 	$vagrant halt - powers off
 	$vagrant suspend - saves the state of your vagrant box 
 	$vagrant ssh - log in to your vagrant box through ssh
-	$vagrant destroy - revert all changes to the box
+	$vagrant destroy - destroy the box environment, back to the base state 
 
 ## Adding a vagrant box
 ## proceed to cloning if you want to add box locally
