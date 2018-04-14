@@ -8,23 +8,21 @@
 	$vagrant ssh - log in to your vagrant box through ssh
 	$vagrant destroy - revert all changes to the box
 
-# Run this to create the Vagrantfile
-# which contains the initial setup
-# the box will be name precise32
-# and can be downloaded in the url specified
+## Adding a vagrant box
+# create the init vagrantinit file
+# that contains configurations about the vagrant box
+# command below tell the initialize a box
+# named precise32 from its url 
 1. vagrant init precise32 http://files.vagrantup.com/precise32.box
-
 or 
-
 # Without knowing the url repo
 	$ vagrant init `vboxname in vagrant repo`
 
-# additional setup can be made on vagrantfile
-# Once the vagrantfile is created
-# download and run
+
+# modify vagrantfile as needed
+# run the machine, download if it doesn't exist
 2. vagrant up
 
-# this will download the box
 # after downloading, login by
 3. vagrant ssh
 
