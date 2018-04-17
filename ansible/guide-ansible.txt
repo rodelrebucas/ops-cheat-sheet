@@ -1,2 +1,8 @@
-## To start testing ansible first provision a vagrant box for testing a node
+## To start testing ansible first provision a vagrant box
+## for host or controll machine and for the node
 ## see the vagrant guide
+
+# generate first your ssh keys
+	$ ssh-keygen -t rsa
+# copy public key to host machine(node)
+	$ ssh-copy-id -i user/root@ip
