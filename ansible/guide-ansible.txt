@@ -1,5 +1,5 @@
 ## To start testing ansible, first provision a vagrant box
-## for host or controll machine and for the node
+## for host or control machine for the node
 ## see the vagrant guide
 
 # generate first your ssh keys
@@ -8,9 +8,9 @@
 	$ ssh-copy-id -i user/root@ip
 # Install ansible through pip or a package manager
 # in this guide ansible is installed with pip
-# host and nodes are using arhchlinus distro
+# host and nodes are using archlinux distro
 # Make sure nodes already have python installed
-# Update the include updating in your plays
+# Update or include updating the host in your plays
 # before executing more complex commands
 
 # Create/Edit the inventory file which contain ip addresses of your nodes
