@@ -1,5 +1,6 @@
 ## To start testing ansible, first provision a vagrant box
 ## for host or control machine for the node
+## *make sure ssh or sshd is enabled on hosts or remote
 ## see the vagrant guide
 
 # generate first your ssh keys
@@ -24,3 +25,27 @@
 # sample running of playbook
 	ansible-playbook 'yourplaybook.yml'
 # check sample playbook that install nginx on target node
+## See also roles to organize more complex playbooks
+## Bootstrap  roles
+	$ mkdir roles && cd roles
+	$ ansible-galaxy init <role-name>
+## Running roles
+	$ ansible-playbook <host> <playbook>
+
+
+## Other commands
+# Run against localhost
+$ ansible -i ./hosts --connection=local local -m ping
+
+# Run against remote server
+$ ansible -i ./hosts remote -m ping
+
+# Enable log in
+ansible -i ./hosts --ask-pass --ssh-extra-args='-o "PubkeyAuthentication=no"' all -m ping.
+
+## Explained
+-i ./hosts - set inventory file
+remote, local, all - the host you want to run insides hosts file.
+-m ping - Use the "ping" module.
+-c local | --connection=local - Run commands on the local server, not over SSH
+
