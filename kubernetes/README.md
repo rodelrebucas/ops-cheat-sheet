@@ -43,6 +43,7 @@
     eval $(minikube docker-env -u).
 
 ### **TERMS**
+*Minikube* is a lightweight Kubernetes implementation that creates a VM on your local machine and deploys a simple cluster containing only one node.  [Source](https://kubernetes.io/docs/tutorials/kubernetes-basics/create-cluster/cluster-intro/)
 
 a. *Kubernetes Pod* is a group of one or more Containers, tied together for the purposes of administration and networking. 
 
@@ -50,7 +51,7 @@ b. *Kubernetes Deployment* checks on the health of your Pod and restarts the Pod
 
 c. *Service* handles the request.
 
-d. *Node* a kubelet, runs pods and communicates with master
+d. *Node* a kubelet, runs pods and communicates with master, worker machine
 
 
 ### Create a deployment that manages a Pod
