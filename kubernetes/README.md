@@ -53,6 +53,7 @@ c. *Service* handles the request.
 
 d. *Node* a kubelet, runs pods and communicates with master, worker machine
 
+e. *Cluster* a collection of nodes
 
 ### Create a deployment that manages a Pod
 
@@ -90,6 +91,10 @@ d. *Node* a kubelet, runs pods and communicates with master, worker machine
 
     minikube service hello-node
 
+## Get minikube ip
+
+    minikube ip
+
 ### Clean up commands:
 
     kubectl delete service hello-node
@@ -117,3 +122,5 @@ d. *Node* a kubelet, runs pods and communicates with master, worker machine
     minikube service hello-node
 
 ##### Original tutorial source: https://kubernetes.io/docs/tutorials/hello-minikube/
+
+
