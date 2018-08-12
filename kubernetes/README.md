@@ -55,7 +55,7 @@ d. *Node* a kubelet, runs pods and communicates with master, worker machine
 
 e. *Cluster* a collection of nodes
 
-### Create a deployment that manages a Pod
+### Create a deployment that manages a Pod (Imperative)
 
     kubectl run hello-node --image=hello-node:v1 --port=8080 --image-pull-policy=Never
 
@@ -64,6 +64,14 @@ e. *Cluster* a collection of nodes
 ### View the deployment/s
 
     kubectl get deployments
+
+### Delete Deployment (imperatively created)
+
+    kubectl delete deployment/<DEPLOYMENT_NAME>
+
+### Delete Deployment (declaratively created)
+
+    kubectl delete -f <file_path>.yaml
 
 ###  View the pod
 
