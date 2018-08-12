@@ -40,7 +40,7 @@
 
 ### Disable the minikube Docker daemon
     
-    eval $(minikube docker-env -u).
+    eval $(minikube docker-env -u)
 
 ### **TERMS**
 *Minikube* is a lightweight Kubernetes implementation that creates a VM on your local machine and deploys a simple cluster containing only one node.  [Source](https://kubernetes.io/docs/tutorials/kubernetes-basics/create-cluster/cluster-intro/)
