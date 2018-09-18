@@ -2,6 +2,10 @@
     
     choco install chefdk (must have an elevated rights)
 
+### Start the chef client service
+
+    chef-service-manager -a start
+
 #### Generate your cookbook 
 
     chef generate cookbook first_cookbook
