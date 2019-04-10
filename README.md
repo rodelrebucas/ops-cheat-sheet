@@ -1,12 +1,9 @@
-## ops-cheat-sheet
+## Devops tools setup and guides
 
-#### Basic cheat sheet for:
+- [vagrant](vagrant)
 
-    vagrant
-    ansible
-    kubernetes
-    chef
+- [ansible](ansible)
 
-#### Todo:
-    1. Create a architecture diagram for each tool
-    2. Add explaination and basic commands
+- [kubernetes](kubernetes)
+
+- [chef](chef)
