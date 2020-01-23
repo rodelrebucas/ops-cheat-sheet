@@ -1,4 +1,4 @@
-#### Quickstart,  run these commands make minikube and kubectl are installed
+#### Quickstart,  run these commands make sure minikube and kubectl are installed
     minikube start
     kubectl config current-context
     eval $(minikube docker-env)
