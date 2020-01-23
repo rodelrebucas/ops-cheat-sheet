@@ -24,4 +24,4 @@ Berksfile.lock
 Policyfile.lock.json
 
 # node
-**/node_modules/*
+**/node_modules
