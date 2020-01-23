@@ -1,0 +1,27 @@
+---
+# tasks file for virtualbox
+- name: Install linux414-virtualbox-host-modules
+  pacman:
+    name: linux414-virtualbox-host-modules
+    state: present
+  become: yes
+  tags: vbox
+
+- name: Install virtualbox
+  pacman:
+    name: virtualbox
+    state: present
+  notify: '{{ item }}'
+  with_items:
+    - Restart host
+    - Wait for the host from restart
+    - Add user to vboxusers group
+  become: yes
+  tags: vbox
+
+- name: Install vagrant
+  pacman:
+    name: vagrant
+    state: present
+  become: yes
+  tags: vagrant

@@ -1,0 +1,98 @@
+---
+- name: Change shell to zsh
+  expect:
+    command: chsh -s /usr/bin/zsh
+    responses:
+      (?i)password: "{{ required_vars.user_pass }}"
+
+- name: Run install.sh
+  # capture return code since
+  # it wants you to change your shell
+  # and changing shell requires root password
+  expect:
+    command: /usr/bin/sh /home/'{{ user }}'/install.sh -O -
+    responses:
+      (?i)password: '{{ required_vars.user_pass }}'
+  register: install_zsh
+  failed_when:  install_zsh.rc|int > 0
+
+- name: Set zsh theme
+  lineinfile:
+    path: '{{ required_vars.zshrc_file }}'
+    state: present
+    regexp: '^ZSH_THEME=.*'
+    line: 'ZSH_THEME="ys"'
+    
+- name: Add z to .zshrc
+  lineinfile:
+    path: '{{ required_vars.zshrc_file }}'
+    state: present
+    line: '. ~/.bin/z/z.sh'
+    
+- name: Install vscode extensions
+  command: '/usr/bin/code --install-extension {{ item }}'
+  with_items:
+    - ms-python.python
+    - joslarson.black-vscode
+    - asilverio.blackai-visual-studio-code
+    - PKief.material-icon-theme
+    - eamodio.gitlens
+
+- name: Setup git configurations
+  command: 'git config --global {{ item }}'
+  with_items:
+    - user.name '{{ required_vars.git_username }}'
+    - user.email '{{ required_vars.git_user_email }}'
+    - color.ui auto
+    - color.branch auto
+    - color.diff auto
+    - color.status auto
+    
+- name: Create git log alias
+  lineinfile: 
+    path: '{{ required_vars.zshrc_file }}'
+    state: present
+    line: "alias glog=\"git log --graph --all --pretty=format:\'%C(blue)%h %C(red)%d %Creset - %C(yellow)%s%Creset %C(green)(%cr)%Creset <%aN>\'\""
+
+- name: Generate rsa keys
+  # expect:
+  command: /usr/bin/ssh-keygen -t rsa -N '' -b 4096 -C '{{ required_vars.git_user_email }}' -f ~/.ssh/id_rsa
+    # responses:
+    #   'Generating public/private rsa key pair.\r\nEnter file in which to save the key \(*\)': "\n"
+    #   'Enter passphrase (empty for no passphrase)': "\n"
+  args:
+    # get default running user
+    creates: ~/.ssh/id_rsa
+
+- name: Set global npm packages dir
+  file:
+    path: '{{ npm_folder }}'
+    state: directory
+    mode: 0755
+
+- name: Npm set prefix
+  command: /usr/bin/npm config set prefix ~/.npm-global
+
+- name: Add npm path to .profile
+  lineinfile:
+    path: ~/.profile
+    state: present
+    line: 'export PATH=~/.npm-global/bin:$PATH'
+
+- name: Source .profile
+  shell: source ~/.profile
+
+- name: Start docker service
+  systemd:
+    state: started
+    enabled: yes
+    daemon_reload: yes
+    name: docker
+  become: yes
+
+- name: Add user to docker group
+  user:
+    name: '{{ user }}'
+    groups: docker
+    append: yes
+  become: yes

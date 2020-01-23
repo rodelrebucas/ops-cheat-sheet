@@ -1,0 +1,17 @@
+---
+# tasks file for pip
+- name: Update pip
+  pip:
+    name: pip
+    extra_args: --user
+    state: forcereinstall
+  
+- name: Install dev packages
+  pip:
+    name: '{{ item }}'
+    extra_args: --user
+  with_items:
+    - black
+    - pipenv
+    - ansible
+  notify: Add pip path packages to .zshrc

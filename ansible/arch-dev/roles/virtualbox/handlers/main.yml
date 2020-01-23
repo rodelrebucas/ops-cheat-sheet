@@ -1,0 +1,18 @@
+---
+# handlers file for virtualbox
+- name: Restart host
+  shell: sleep 5 && reboot
+  async: 1 # run in async mode
+  poll: 0 # check without delay , default 10
+
+- name: Wait for the host from restart
+  wait_for_connection:
+    delay: 30
+    timeout: 90
+
+- name: Add user to vboxusers group
+  user:
+    name: '{{ user }}'
+    groups: vboxusers
+    append: yes
+  become: yes

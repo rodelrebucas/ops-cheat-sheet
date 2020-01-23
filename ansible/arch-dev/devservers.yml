@@ -1,0 +1,26 @@
+---
+- hosts: vbox_local # local_dev_group
+  pre_tasks:  
+    - name: Check if group variables are defined
+      debug: 
+        msg: '{{ item }}'
+      failed_when: item['value'] == None
+      loop: "{{ lookup('dict', required_vars|default({})) }}"
+      # register: command_result
+
+    # - name: Fail
+    #   fail:
+    #     msg: 'variable is undefined'
+    #   when: "'FAILED' in command_result.stderr"
+
+    - name: Restart NetworkManager
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: NetworkManager
+      become: yes
+      # become_user: "{{ user }}"
+  roles:
+    - common
+      #- pip
+      #- virtualbox

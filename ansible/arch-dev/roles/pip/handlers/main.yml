@@ -1,0 +1,7 @@
+---
+# handlers file for pip
+- name: Add pip path packages to .zshrc
+  lineinfile:
+    path: '{{ required_vars.zshrc_file }}'
+    state: present
+    line: 'export PATH=$HOME/.local/bin:$PATH'

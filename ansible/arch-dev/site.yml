@@ -1,0 +1,35 @@
+---
+# Make sure ssh keys are already set
+# to successfuly run this playbook
+# All infrastructure
+# sub modules
+#   devservers.yml
+# Run with:
+#   $ ansible-playbook site.yml --limit webservers
+# or 
+#   $ ansible-playbook webservers.yml
+
+- hosts: local_dev_group
+  gather_facts: no
+  tasks:
+      # - name: test delete
+      #   local_action:
+      #     module: file
+      #     path: /var/lib/pacman/db.lck
+      #     state: absent
+    - name: Copy public key to authorized key on remote
+      local_action: command /usr/bin/ssh-copy-id '{{user}}'@'{{inventory_hostname}}' -f
+      tags: setup
+
+    - name: Make sure ssh are set for forwarding   
+      local_action: command '{{ item }}'
+      with_items:
+        - /usr/bin/ssh-agent
+        - /usr/bin/ssh-add
+      tags: setup
+
+    - name: Gather facts
+      setup: 
+      tags: setup
+
+- import_playbook: devservers.yml

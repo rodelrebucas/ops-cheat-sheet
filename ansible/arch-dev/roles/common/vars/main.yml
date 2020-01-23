@@ -1,0 +1,4 @@
+---
+# vars file for common
+z_folder: ~/.bin/z/
+npm_folder: ~/.npm-global

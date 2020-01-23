@@ -1,0 +1,5 @@
+---
+# handlers file for common
+- name: Install and setup development packages
+  import_tasks: manjaro.yml
+  when: ansible_distribution == 'Archlinux'

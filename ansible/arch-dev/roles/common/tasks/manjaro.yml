@@ -1,0 +1,126 @@
+---
+# tasks file for common
+- name: Make sure no db.lock exist # file exists on failed update, so we need to delete it to proceed a retry update.
+  file:
+    path: /var/lib/pacman/db.lck
+    state: absent
+  become: yes
+
+- name: Update cache and upgrade packages 
+  command: pacman -Syu --noconfirm
+  become: yes
+  tags: upgrade
+
+- name: Install yaourt
+  pacman:
+    name: yaourt
+    force: yes
+    state: present
+  become: yes
+  register: yaourt
+  tags: yaourt
+  # changed_when: True
+  # use tag if you want to run particular task by tags
+  # tag: yaourt-install
+
+- name: Install terminator
+  pacman:
+    name: terminator
+    state: present
+  become: yes
+
+- name: Install zsh
+  pacman:
+    name: zsh
+    state: present
+  become: yes
+  notify: Change shell to zsh
+  # changed_when: True
+  tags: zsh
+  # changed_when: True # force change to execute handler
+
+- name: Install oh-my-zsh
+  command: /usr/bin/wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh #-O -
+  args:
+    chdir: ~/
+  notify:
+    - Run install.sh
+    - Set zsh theme
+  tags: zsh
+  # for asynchronous #
+  # async: 45
+  # poll: 0
+
+- name: Install Z
+  git:
+    repo: git@github.com:rupa/z.git
+    dest: '{{ z_folder }}'
+    accept_hostkey: yes
+  notify: Add z to .zshrc
+  tags: zsh
+
+- name: Install vim
+  pacman:
+    name: vim
+    state: present
+  become: yes
+
+- name: Install git
+  pacman:
+    name: git
+    state: present
+  notify:
+    - Setup git configurations
+    - Create git log alias
+    - Generate rsa keys
+  become: yes
+
+- name: Install nodejs
+  pacman:
+    name: nodejs
+    state: present
+  become: yes
+  
+- name: Install npm
+  pacman:
+    name: npm
+    state: present
+  become: yes
+  notify:
+    - Set global npm packages dir
+    - Npm set prefix
+    - Add npm path to .profile
+    - Source .profile
+
+- name: Install docker
+  pacman:
+    name: docker
+    state: present
+  become: yes
+  notify:
+    - Add user to docker group 
+    - Start docker service
+  tags: docker
+  
+- name: Create tmp folder ~/.yaourt_tmp
+  file:
+    path: ~/.yaourt_tmp
+    state: directory
+    mode: 0755
+  when: yaourt is success
+  tags: yaourt
+
+- name: Install vscode
+  expect:
+    command: /usr/bin/yaourt --noconfirm visual-studio-code-bin --tmp /home/'{{ user }}'/.yaourt_tmp
+    responses:
+      '==>': '1'
+      '\[sudo\] password for rods: ': '{{ required_vars.user_pass }}'
+    timeout: 300
+  register: yaourt_vscode 
+  when: yaourt is success
+  failed_when:  yaourt_vscode.rc == 1 or yaourt_vscode.rc == 'null' #or "'Error|error' in yaourt_vscode.stderr"
+  notify: Install vscode extensions
+  tags: ide
+# - debug:
+#     var: yaourt_vscode
