@@ -12,11 +12,6 @@
 - hosts: local_dev_group
   gather_facts: no
   tasks:
-      # - name: test delete
-      #   local_action:
-      #     module: file
-      #     path: /var/lib/pacman/db.lck
-      #     state: absent
     - name: Copy public key to authorized key on remote
       local_action: command /usr/bin/ssh-copy-id '{{user}}'@'{{inventory_hostname}}' -f
       tags: setup
