@@ -19,7 +19,8 @@ _Named precise32 from its url_
 
 **or** 
 
-### Without knowing the url repo
+Without knowing the url repo
+	
 	$ vagrant init `vboxname in vagrant repo`
 
 
@@ -33,7 +34,7 @@ _Named precise32 from its url_
 
 **Create a separate folder since the path where vagrantfile is created is shared in the box**
 
-### Check the documentation for more details
+*Check the documentation for more details*
 
 ---
 
