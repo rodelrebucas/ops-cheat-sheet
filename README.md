@@ -8,4 +8,4 @@
 
 - [chef](chef) - Chef basics
 
-- [manjaro setup](manjaro-dev-setup) - Setting up dev environment in a single playbook
+- [development setup](dev-setup) - Setting up dev environment without roles

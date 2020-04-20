@@ -1,0 +1,147 @@
+---
+- name: Include variables
+  include_vars:
+    file: manjaro-vars.yml
+    name: xvar
+  tags: var
+
+- name: Check if pamac is installed
+  command: which pamac
+  register: pamac
+  tags: base
+
+- name: Check updates with pamac
+  command: pamac checkupdates
+  register: updates
+  when: pamac.rc == 0
+  failed_when: updates.stderr != ""
+  tags: base
+
+- name: Update with pamac
+  command: pamac upgrade --no-confirm
+  become: yes
+  when:
+    - pamac.rc == 0
+    - updates.rc > 0
+  tags: base
+
+- name: Install yay
+  command: pamac install yay --no-confirm
+  become: yes
+  tags: base
+
+- name: Install code
+  command: pamac install code --no-confirm
+  become: yes
+  tags:
+    - dev
+    - long
+
+- name: Install terminator
+  command: pamac install terminator --no-confirm
+  register: terminator
+  become: yes
+  tags: dev
+
+- name: Install vim
+  command: pamac install vim --no-confirm
+  become: yes
+  tags:
+    - dev
+    - shell
+
+- name: Install zsh
+  command: pamac install zsh zsh-completions --no-confirm
+  register: zsh
+  become: yes
+  notify:
+    - Change shell to zsh
+  tags:
+    - dev
+    - shell
+
+- name: Remove existing .oh-my-zsh
+  file:
+    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
+    state: absent
+
+- name: Install oh-my-zsh
+  shell: >
+    curl -o- "https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh" | bash
+  args:
+    chdir: "{{ ansible_env.HOME }}"
+  notify:
+    - Set zsh theme
+  tags:
+    - dev
+    - shell
+
+- name: Install git
+  command: pamac install git --no-confirm
+  become: yes
+  notify:
+    - Setup git configurations
+    - Create git log alias
+    - Generate rsa keys
+  tags:
+    - dev
+    - shell
+
+- name: Install docker
+  command: pamac install docker --no-confirm
+  become: yes
+  tags:
+    - dev
+    - docker
+
+- name: Download docker-compose
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/{{ xvar.docker_compose_version }}/docker-compose-Linux-x86_64"
+    dest: /usr/local/bin/docker-compose
+    mode: +x
+  become: yes
+  tags:
+    - dev
+    - docker
+
+- name: Install nvm
+  shell: >
+    curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/{{ xvar.nvm_version }}/install.sh" | bash
+  args:
+    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+  notify:
+    - Add nvm to path
+    - Load nvm
+    - Load bash completion
+  tags:
+    - dev
+    - node
+
+- name: Install latest node
+  shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install node"
+  args:
+    creates: "{{ ansible_env.HOME }}/.nvm/versions/node"
+    chdir: "{{ ansible_env.HOME }}"
+    executable: /bin/zsh
+  tags:
+    - dev
+    - node
+
+- name: Remove golang folder
+  file:
+    path: "{{ ansible_env.HOME }}/Downloads/go"
+    state: absent
+  tags: golang
+
+- name: Install Golang
+  get_url:
+    url: "https://dl.google.com/go/{{ xvar.golang_version }}.linux-amd64.tar.gz"
+    dest: "{{ ansible_env.HOME }}/Downloads/golang.tar.gz"
+  notify:
+    - Extract golang
+    - Remove golang tgz
+    - Add go root to path
+    - Add go path to path
+  tags:
+    - dev
+    - golang
