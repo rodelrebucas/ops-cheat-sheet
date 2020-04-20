@@ -1,0 +1,200 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Include variables
+      include_vars:
+        file: vars.yml
+        name: xvar
+      tags: var
+
+    - name: Check if pamac is installed
+      command: which pamac
+      register: pamac
+      tags: base
+
+    - name: Check updates with pamac
+      command: pamac checkupdates
+      register: updates
+      when: pamac.rc == 0
+      failed_when: updates.stderr != ""
+      tags: base
+
+    - name: Update with pamac
+      command: pamac upgrade --no-confirm
+      when:
+        - pamac.rc == 0
+        - updates.rc > 0
+      tags: base
+
+    - name: Install yay
+      command: pamac install yay --no-confirm
+      become: yes
+      tags: base
+
+    - name: Install code
+      command: pamac install code --no-confirm
+      become: yes
+      tags:
+        - dev
+        - long
+
+    - name: Install terminator
+      command: pamac install terminator --no-confirm
+      register: terminator
+      become: yes
+      tags: dev
+
+    - name: Install vim
+      command: pamac install vim --no-confirm
+      become: yes
+      tags:
+        - dev
+        - shell
+
+    - name: Install zsh
+      command: pamac install zsh zsh-completions --no-confirm
+      register: zsh
+      become: yes
+      notify:
+        - Change shell to zsh
+      tags:
+        - dev
+        - shell
+
+    - name: Install oh-my-zsh
+      command: /usr/bin/wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
+      args:
+        chdir: ~/
+      notify:
+        - Run install.sh
+        - Set zsh theme
+        - Remove install.sh file
+      tags:
+        - dev
+        - shell
+
+    - name: Install git
+      command: pamac install git --no-confirm
+      become: yes
+      notify:
+        - Setup git configurations
+        - Create git log alias
+        - Generate rsa keys
+      tags:
+        - dev
+        - shell
+
+    - name: Install docker
+      command: pamac install docker --no-confirm
+      become: yes
+      tags:
+        - dev
+        - docker
+
+    - name: Download docker-compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/{{ xvar.docker_compose_version }}/docker-compose-Linux-x86_64"
+        dest: /usr/local/bin/docker-compose
+        mode: +x
+      become: yes
+      tags:
+        - dev
+        - docker
+
+    - name: Install nvm
+      get_url:
+        url: https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh
+        dest: ~/
+      notify:
+        - Run install.sh
+        - Remove install.sh file
+      tags:
+        - dev
+        - node
+
+    - name: Remove golang file
+      file:
+        path: ~/Downloads/golang.tar.gz
+        state: absent
+      tags: golang
+
+    - name: Install Golang
+      get_url:
+        url: "https://dl.google.com/go/{{ xvar.golang_version }}.linux-amd64.tar.gz"
+        dest: ~/Downloads/golang.tar.gz
+      notify:
+        - Extract golang
+        - Remove golang tgz
+        - Add go root to path
+        - Add go path to path
+      tags:
+        - dev
+        - golang
+
+  handlers:
+    - name: Change shell to zsh
+      command: chsh -s /usr/bin/zsh
+      become: yes
+      when: zsh is success
+
+    - name: Run install.sh
+      command: /usr/bin/sh ~/install.sh -O -
+      register: install_zsh
+      failed_when:
+        - install_zsh.rc|int > 0
+        - install_zsh.stderr != ""
+
+    - name: Set zsh theme
+      lineinfile:
+        path: ~/.zshrc
+        state: present
+        regexp: "^ZSH_THEME=.*"
+        line: 'ZSH_THEME="ys"'
+
+    - name: Remove install.sh file
+      file:
+        path: ~/install.sh
+        state: absent
+
+    - name: Setup git configurations
+      command: "git config --global {{ item }}"
+      with_items:
+        - user.name "{{ xvar.user }}"
+        - user.email "{{ xvar.email }}"
+        - color.ui auto
+        - color.branch auto
+        - color.diff auto
+        - color.status auto
+
+    - name: Create git log alias
+      lineinfile:
+        path: ~/.zshrc
+        state: present
+        line: 'alias glog="git log --graph --all --pretty=format:''%C(blue)%h %C(red)%d %Creset - %C(yellow)%s%Creset %C(green)(%cr)%Creset <%aN>''"'
+
+    - name: Generate rsa keys
+      command: /usr/bin/ssh-keygen -t rsa -N '' -b 4096 -C '{{ xvar.email }}' -f ~/.ssh/id_rsa
+      args:
+        creates: ~/.ssh/id_rsa
+
+    - name: Extract golang
+      unarchive:
+        src: ~/Downloads/golang.tar.gz
+        dest: ~/Downloads
+
+    - name: Add go root to path
+      lineinfile:
+        path: ~/.zshrc
+        state: present
+        line: "PATH=$PATH:{{ xvar.golang_root_path }}/bin"
+
+    - name: Add go path to path
+      lineinfile:
+        path: ~/.zshrc
+        state: present
+        line: "PATH=$PATH:{{ xvar.golang_app_path}}/bin"
+
+    - name: Remove golang tgz
+      file:
+        path: ~/Downloads/golang.tar.gz
+        state: absent

@@ -1,9 +1,11 @@
 ## Devops tools setup and guides
 
-- [vagrant](vagrant)
+- [vagrant](vagrant) - Vagrant guide setting and getting started
 
-- [ansible](ansible)
+- [ansible](ansible) - Using ansible with with roles
 
-- [kubernetes](kubernetes)
+- [kubernetes](kubernetes) - Kubernetes guide with minikube
 
-- [chef](chef)
+- [chef](chef) - Chef basics
+
+- [manjaro setup](manjaro-dev-setup) - Setting up dev environment in a single playbook

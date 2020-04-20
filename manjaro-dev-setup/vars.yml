@@ -1,0 +1,7 @@
+---
+user: <change with actual user>
+email: <change with actual email>
+docker_compose_version: 1.25.5
+golang_version: go1.14.2
+golang_root_path: ~/Downloads/go
+golang_app_path: ~/Downloads/golang_apps
