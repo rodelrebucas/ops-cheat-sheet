@@ -38,6 +38,9 @@
     - color.branch auto
     - color.diff auto
     - color.status auto
+  when:
+    - xvar.user != None
+    - xvar.email != None
 
 - name: Create git log alias
   lineinfile:
@@ -49,6 +52,8 @@
   command: /usr/bin/ssh-keygen -t rsa -N '' -b 4096 -C '{{ xvar.email }}' -f "{{ ansible_env.HOME }}/.ssh/id_rsa"
   args:
     creates: "{{ ansible_env.HOME }}/.ssh/id_rsa"
+  when:
+    - xvar.email != None
 
 - name: Extract golang
   unarchive:
