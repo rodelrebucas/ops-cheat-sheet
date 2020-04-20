@@ -85,7 +85,7 @@
     - Generate rsa keys
   tags:
     - dev
-    - shell
+    - git
 
 - name: Install docker
   command: pamac install docker --no-confirm
