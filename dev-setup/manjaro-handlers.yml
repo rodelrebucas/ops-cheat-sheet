@@ -76,3 +76,10 @@
   file:
     path: "{{ ansible_env.HOME }}/Downloads/golang.tar.gz"
     state: absent
+
+- name: Add user to docker group
+  user:
+    name: "{{ ansible_env.USER }}"
+    groups: docker
+    append: yes
+  become: yes

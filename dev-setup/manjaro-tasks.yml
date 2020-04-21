@@ -90,6 +90,7 @@
 - name: Install docker
   command: pamac install docker --no-confirm
   become: yes
+  notify: Add user to docker group
   tags:
     - dev
     - docker
