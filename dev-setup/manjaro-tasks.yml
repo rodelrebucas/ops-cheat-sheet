@@ -142,7 +142,7 @@
     - Extract golang
     - Remove golang tgz
     - Add go root to path
-    - Add go path to path
+    - Export go path
   tags:
     - dev
     - golang
