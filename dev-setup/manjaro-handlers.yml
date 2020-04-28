@@ -70,7 +70,7 @@
   lineinfile:
     path: "{{ ansible_env.HOME }}/.zshrc"
     state: present
-    line: "PATH=$PATH:{{ xvar.golang_app_path}}/bin"
+    line: "export GOPATH={{ xvar.golang_app_path }}"
 
 - name: Remove golang tgz
   file:
